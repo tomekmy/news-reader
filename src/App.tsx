@@ -27,7 +27,7 @@ function App() {
     Promise.all(promisees).then((values) => {
       console.log(values);
       setFeed(values as unknown as Feed[]);
-    });
+    }).catch((err) => { console.log(err); })
   }, []);
 
 

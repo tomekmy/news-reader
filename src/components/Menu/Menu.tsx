@@ -2,7 +2,7 @@
 import dataSources from "../../utils/data-sources";
 
 const Menu = () => {
-  const sources = localStorage.getItem("sources") || '';
+  const sources = localStorage.getItem("sources") ?? '';
   
   const handleCheckboxChange = (event) => {
     console.log('event', event);
