@@ -24,6 +24,7 @@ function App() {
 
   useEffect(() => {
     const promisees = dataSources[0].sources.map((source) => parse(source.url));
+
     Promise.all(promisees).then((values) => {
       console.log(values);
       setFeed(values as unknown as Feed[]);
@@ -32,7 +33,7 @@ function App() {
 
 
   return (
-    <div className="min-h-screen min-w-full p-6 bg-white dark:bg-slate-800 dark:text-white">
+    <div className="font-open-sans font-light min-h-screen min-w-full p-6 bg-white dark:bg-slate-800 dark:text-white">
       <Menu />
       <main>
         {dataSources.map((source) => (

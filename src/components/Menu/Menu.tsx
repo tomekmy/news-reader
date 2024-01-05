@@ -9,7 +9,7 @@ const Menu = () => {
   };
 
   return (
-    <nav className="sticky bg-slate-200 text-black w-full p-2 border-solid border-2 border-sky-500">
+    <nav className="sticky bg-slate-200 text-black w-full p-2 border-solid border-2 border-sky-500 font-normal">
       <ul>
         {dataSources.map(item => (
           <li key={item.sourceName}>

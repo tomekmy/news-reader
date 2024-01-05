@@ -2,7 +2,11 @@
 export default {
   content: ["./index.html", "./src/**/*.{html,js,ts,tsx}"],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        'open-sans': ['"Open Sans"', 'sans-serif'],
+      },
+    },
   },
   plugins: [],
 }
