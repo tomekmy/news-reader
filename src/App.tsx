@@ -23,7 +23,7 @@ function App() {
   const [feed, setFeed] = useState<Feed[] | null>(null);
 
   useEffect(() => {
-    const promisees = dataSources[0].sources.map((source) => parse(source.url));
+    const promisees = dataSources[2].sources.map((source) => parse(source.url));
 
     Promise.all(promisees).then((values) => {
       console.log(values);
@@ -44,12 +44,11 @@ function App() {
             </div>
             <div className="flex flex-wrap gap-4 justify-center p-5 items-start">
             {
-              feed?.map((source) => (
-                <div key={source.title} className="grid gap-1 max-w-96 min-w-60 pt-4 items-start">
-                  <div className="font-semibold">Nazwa kanału: {source.title}</div>
-                  <div className="font-semibold">Opis kanału: {source.description}</div>
-                  <div className="text-sm">Źródło: <a className="hover:text-slate-300" href={source.link}>{source.link}</a></div>
-                  {
+              source.sources.map((source) => (
+                <div key={source.name} className="grid gap-1 max-w-96 min-w-60 pt-4 items-start">
+                  <div className="font-semibold">Nazwa kanału: {source.name}</div>
+                  <div className="text-sm">Źródło: <a className="hover:text-slate-300" href={source.url}>{source.url}</a></div>
+                  {/* {
                   source.items.map((item) => (
                     <div key={item.title} className="grid gap-2 max-w-96 min-w-60 pt-4 items-start">
                       <h3 className="font-bold">{item.title}</h3>
@@ -57,7 +56,7 @@ function App() {
                       <p className="indent-2">{item.description}</p>
                       <a className="text-sm hover:text-slate-300" href={item.link}>Czytaj artykuł</a>
                     </div>
-                  ))}
+                  ))} */}
                 </div>
               ))
             }
