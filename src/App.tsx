@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import moment from "moment";
 import parse from "rss-to-json";
 import dataSources from './utils/data-sources';
