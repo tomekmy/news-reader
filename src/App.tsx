@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import moment from "moment";
 import parse from "rss-to-json";
 import dataSources from './utils/data-sources';
 import Menu from './components/Menu/Menu';
+import Header from './components/Header/Header';
 
 type FeedItem = {
   title: string;
@@ -20,6 +22,7 @@ type Feed = {
 
 
 function App() {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [feed, setFeed] = useState<Feed[] | null>(null);
 
   useEffect(() => {
@@ -34,6 +37,7 @@ function App() {
 
   return (
     <div className="font-open-sans font-light min-h-screen min-w-full p-6 bg-white dark:bg-slate-800 dark:text-white">
+      <Header />
       <Menu />
       <main>
         {dataSources.map((source) => (
