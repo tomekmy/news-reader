@@ -1,7 +1,12 @@
-"use client";
+import { FC } from "react";
 import dataSources from "../../utils/data-sources";
 
-const Menu = () => {
+type Props = {
+  menuOpen: boolean;
+};
+
+const Menu: FC<Props> = (props) => {
+  const { menuOpen } = props;
   const sources = localStorage.getItem("sources") ?? '';
   
   const handleCheckboxChange = (event) => {
@@ -9,7 +14,7 @@ const Menu = () => {
   };
 
   return (
-    <nav className="sticky bg-slate-200 text-black w-full p-2 border-solid border-2 border-sky-500 font-normal">
+    <nav className={`sticky ${!menuOpen ? 'max-h-0 border-none opacity-0' : 'max-h-96 border-solid opacity-100'} p-2 overflow-hidden bg-slate-200 text-black w-full border-2 border-sky-500 font-normal transition-all`}>
       <ul>
         {dataSources.map(item => (
           <li key={item.sourceName}>

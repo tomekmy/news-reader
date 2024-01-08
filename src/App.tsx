@@ -23,6 +23,11 @@ type Feed = {
 function App() {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [feed, setFeed] = useState<Feed[] | null>(null);
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  const handleMenuClick = () => {
+    setMenuOpen(!menuOpen);
+  };
 
   useEffect(() => {
     const promisees = dataSources[2].sources.map((source) => parse(source.url));
@@ -36,8 +41,8 @@ function App() {
 
   return (
     <div className="font-open-sans font-light min-h-screen min-w-full p-6 bg-white dark:bg-slate-800 dark:text-white">
-      <Header />
-      <Menu />
+      <Header menuOpen={menuOpen} handleMenuClick={handleMenuClick}/>
+      <Menu menuOpen={menuOpen} />
       <main>
         {dataSources.map((source) => (
           <div key={source.sourceName} style={{backgroundColor: source.darkColor}}>
