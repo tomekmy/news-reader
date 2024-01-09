@@ -7,22 +7,27 @@ const dataSources = [{
   sources: [{
     name: 'Wszystkie',
     url: 'https://www.polsatnews.pl/rss/wszystkie.xml',
+    feed: [],
   },
   {
     name: 'Polska',
     url: 'https://www.polsatnews.pl/rss/polska.xml',
+    feed: [],
   },
   {
     name: 'Świat',
     url: 'https://www.polsatnews.pl/rss/swiat.xml',
+    feed: [],
   },
   {
     name: 'Wideo',
     url: 'https://www.polsatnews.pl/rss/wideo.xml',
+    feed: [],
   },
   {
     name: 'Biznes',
     url: 'https://www.polsatnews.pl/rss/biznes.xml',
+    feed: [],
   }]
 },
 {
@@ -34,10 +39,12 @@ const dataSources = [{
   sources: [{
     name: 'Wszystkie',
     url: 'https://pap-mediaroom.pl/rss.xml',
+    feed: [],
   },
   {
     name: 'Biznes i finanse',
     url: 'https://pap-mediaroom.pl/kategoria/biznes-i-finanse/rss.xml',
+    feed: [],
   }]
 },
 {
@@ -49,10 +56,12 @@ const dataSources = [{
   sources: [{
     name: 'Co nowego',
     url: 'https://www.autocentrum.pl/rss/co-nowego/',
+    feed: [],
   },
   {
     name: 'Publikacje',
     url: 'https://www.autocentrum.pl/rss/publikacje/',
+    feed: [],
   }]
 }];
 
