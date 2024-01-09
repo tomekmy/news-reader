@@ -60,12 +60,14 @@ function App() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [feed]);
 
+  // console.log(data.map((source) => source.active ));
+
   return (
     <div className="font-open-sans font-light min-h-screen min-w-full p-6 bg-white dark:bg-slate-800 dark:text-white">
       <Header menuOpen={menuOpen} handleMenuClick={handleMenuClick}/>
       <Menu menuOpen={menuOpen} />
       <main>
-        {data.map((source) => (
+        {data.map((source) => (source.active || source.sources.some(item => item.active)) ? (
           <div key={source.sourceName} style={{backgroundColor: source.darkColor}}>
             <div className="p-5 text-center grid justify-items-center	gap-3">
               <h1 className="font-bold text-lg">{source.sourceName}</h1>
@@ -91,7 +93,7 @@ function App() {
             }
             </div>
           </div>
-        ))}
+        ): null)}
       </main>
     </div>
   )
