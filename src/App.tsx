@@ -5,11 +5,13 @@ import { useLocalStorage } from "@uidotdev/usehooks";
 import dataSources from './utils/data-sources';
 import Menu from './components/Menu/Menu';
 import Header from './components/Header/Header';
+import striptags from 'striptags';
 
 type FeedItem = {
   title: string;
   created: string;
   description: string;
+  enclosures: { url: string }[];
   link: string;
 };
 
@@ -83,8 +85,9 @@ function App() {
                    item.feed.map((feed: FeedItem) => (
                     <div key={feed.title} className="grid gap-2 max-w-96 min-w-60 pt-4 items-start">
                       <h3 className="font-bold">{feed.title}</h3>
-                      <p className="text-sm">{moment(feed.created).format('DD/MM/YYYY hh:mm')}</p>
-                      <p className="indent-2">{feed.description}</p>
+                      {!!feed.enclosures.length && <img src={feed.enclosures[0].url} alt="Grafika artykułu" />}
+                      <p className="text-sm">{moment(feed.created).isValid() ? moment(feed.created).format('DD/MM/YYYY hh:mm') : feed.created || 'Błąd odczytu daty'}</p>
+                      <p className="indent-2">{striptags(feed.description)}</p>
                       <a className="text-sm hover:text-slate-300" href={feed.link}>Czytaj artykuł</a>
                     </div>
                   ))}
