@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
 import moment from "moment";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import parse from "rss-to-json";
 import { useLocalStorage } from "@uidotdev/usehooks";
 import dataSources from './utils/data-sources';
+import axios from 'axios';
 import Menu from './components/Menu/Menu';
 import Header from './components/Header/Header';
 import striptags from 'striptags';
@@ -25,6 +27,7 @@ type Feed = {
 
 
 function App() {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [feed, setFeed] = useState<Feed[]>([]);
   const [menuOpen, setMenuOpen] = useState(false);
   const [data, saveData] = useLocalStorage("data", dataSources);
@@ -33,21 +36,34 @@ function App() {
     setMenuOpen(!menuOpen);
   };
 
+  
   useEffect(() => {
-    console.log('data', data);
-    data.forEach((mainItem, idx) => {
-      mainItem.sources.forEach((source, index) => {
-        source.active && parse(source.url).then((feed) => {
-          setFeed(prev => [...prev, {
-            ...data[idx].sources[index],
-            mainIdx: idx,
-            sourceIdx: index,
-            feed: feed.items as FeedItem[]
-          }]);
-        }).catch((err) => { console.log(err); });
-      });
-    });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    const fetchData = async () => {
+      const { data }: { data: typeof dataSources } = await axios.get('http://localhost:5000/feed');
+      console.log('sdsdfsfd', data);
+    }
+
+    fetchData().catch((err) => { console.log(err); })
+
+    // axios.get('http://localhost:5000/feed').then((res) => { 
+    //   console.log('res', res);
+    // }).catch((err) => { console.log(err); });
+  
+    // console.log('data', data);
+    // data.forEach((mainItem, idx) => {
+    //   mainItem.sources.forEach((source, index) => {
+    //     source.active && parse(source.url).then((feed) => {
+    //       setFeed(prev => [...prev, {
+    //         ...data[idx].sources[index],
+    //         mainIdx: idx,
+    //         sourceIdx: index,
+    //         feed: feed.items as FeedItem[]
+    //       }]);
+    //     }).catch((err) => { console.log(err); });
+    //   });
+    // });
+    
+
   }, []);
 
   useEffect(() => {
