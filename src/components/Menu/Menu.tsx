@@ -1,36 +1,42 @@
 import { ChangeEvent, FC } from "react";
-import { useLocalStorage } from "@uidotdev/usehooks";
-import dataSources from "../../utils/data-sources";
-
+import { MenuItem } from "../../types";
 
 type Props = {
   menuOpen: boolean;
+  menuItems: MenuItem[];
+  setMenuItems: (menuItems: MenuItem[]) => void;
 };
 
 const Menu: FC<Props> = (props) => {
-  const { menuOpen } = props;
-  const [data, saveData] = useLocalStorage("data", dataSources);
+  const { menuOpen, menuItems, setMenuItems } = props;
   
   const handleCheckboxChange = (event: ChangeEvent<HTMLInputElement>) => {
-    // console.log('event', event.target.name.split('_'));
-    data.forEach(item => {
+    const newMenuItems = menuItems.map(item => {
       if (item.sourceName === event.target.name.split('_')[0]) {
-        item.sources.forEach(source => {
-          if (source.name === event.target.name.split('_')[1]) {
-            source.active = !source.active;
-            console.log('data', data);
-            saveData(data);
-          }
-        });
+        return {
+          ...item,
+          sources: item.sources.map(source => {
+            if (source.name === event.target.name.split('_')[1]) {
+              return {
+                ...source,
+                active: !source.active,
+              }
+            }
+            return source;
+          }),
+        }
       }
+      return item;
     });
+
+    setMenuItems(newMenuItems);
   };
 
   return (
     <nav className={`sticky ${!menuOpen ? 'max-h-0 border-none opacity-0' : 'max-h-96 border-solid opacity-100'} p-2 overflow-y-auto bg-slate-200 text-black w-full border-2 border-sky-500 font-normal transition-all`}>
       <div className="grid">
         <ul className="flex flex-wrap gap-x-5">
-          {data.map(item => (
+          {menuItems.map(item => (
             <li key={item.sourceName}>
               {item.sourceName}
               {!!item.sources.length && (

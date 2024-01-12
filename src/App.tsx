@@ -1,89 +1,48 @@
 import { useEffect, useState } from 'react';
 import moment from "moment";
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import parse from "rss-to-json";
 import { useLocalStorage } from "@uidotdev/usehooks";
-import dataSources from './utils/data-sources';
 import axios from 'axios';
 import Menu from './components/Menu/Menu';
 import Header from './components/Header/Header';
 import striptags from 'striptags';
-
-type FeedItem = {
-  title: string;
-  created: string;
-  description: string;
-  enclosures: { url: string }[];
-  link: string;
-};
-
-type Feed = {
-  name: string;
-  url: string;
-  mainIdx: number;
-  sourceIdx: number;
-  feed: FeedItem[];
-};
-
+import { DataSource, FeedItem, MenuItem } from './types';
 
 function App() {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [feed, setFeed] = useState<Feed[]>([]);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [data, saveData] = useLocalStorage("data", dataSources);
+  const [menuItems, setMenuItems] = useLocalStorage<MenuItem[]>("menuItems", []);
+  const [data, setData] = useState<DataSource[]>([]);
 
   const handleMenuClick = () => {
     setMenuOpen(!menuOpen);
   };
-
   
   useEffect(() => {
     const fetchData = async () => {
-      const { data }: { data: typeof dataSources } = await axios.get('http://localhost:5000/feed');
-      console.log('sdsdfsfd', data);
+      const { data }: { data: DataSource[] } = await axios.get('http://localhost:5000/feed');
+      setData(data);
+
+      if (!menuItems.length) {
+        setMenuItems(
+          data.map((item) => ({
+            sourceName: item.sourceName,
+            active: item.active,
+            sources: item.sources.map((source) => ({
+              name: source.name,
+              active: source.active,
+            })),
+          }))
+        );
+      }
     }
 
     fetchData().catch((err) => { console.log(err); })
-
-    // axios.get('http://localhost:5000/feed').then((res) => { 
-    //   console.log('res', res);
-    // }).catch((err) => { console.log(err); });
-  
-    // console.log('data', data);
-    // data.forEach((mainItem, idx) => {
-    //   mainItem.sources.forEach((source, index) => {
-    //     source.active && parse(source.url).then((feed) => {
-    //       setFeed(prev => [...prev, {
-    //         ...data[idx].sources[index],
-    //         mainIdx: idx,
-    //         sourceIdx: index,
-    //         feed: feed.items as FeedItem[]
-    //       }]);
-    //     }).catch((err) => { console.log(err); });
-    //   });
-    // });
-    
-
-  }, []);
-
-  useEffect(() => {
-    const updatedDataSources = [...data];
-
-    feed.forEach((feedItem) => {
-      const { mainIdx, sourceIdx, feed } = feedItem;
-      (updatedDataSources[mainIdx].sources[sourceIdx].feed as FeedItem[]) = feed;
-    });
-
-    saveData(updatedDataSources);
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [feed]);
-
-  // console.log(data.map((source) => source.active ));
+  }, []);
 
   return (
     <div className="font-open-sans font-light min-h-screen min-w-full p-6 bg-white dark:bg-slate-800 dark:text-white">
       <Header menuOpen={menuOpen} handleMenuClick={handleMenuClick}/>
-      <Menu menuOpen={menuOpen} />
+      {menuItems.length && <Menu menuOpen={menuOpen} setMenuItems={setMenuItems} menuItems={menuItems} />}
       <main>
         {data.map((source) => (source.active || source.sources.some(item => item.active)) ? (
           <div key={source.sourceName} style={{backgroundColor: source.darkColor}}>
