@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import moment from "moment";
 import { useLocalStorage } from "@uidotdev/usehooks";
 import axios from 'axios';
@@ -16,8 +16,8 @@ function App() {
     setMenuOpen(!menuOpen);
   };
 
-  const getItemsById = async () => {
-    const activeSources = menuItems.map((item) => ({
+  const getItemsById = async (menu: MenuItem[]) => {
+    const activeSources = menu.map((item) => ({
       sourceName: item.sourceName,
       sources: item.sources.filter((source) => source.active),
     }));
@@ -29,7 +29,27 @@ function App() {
     } catch (error) {
       console.log(error);
     }
-  }
+  };
+
+  const handleCheckboxChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const newMenuItems = menuItems.map(item => {
+      return {
+        ...item,
+        sources: item.sources.map(source => {
+          if (source.id === event.target.id) {
+            return {
+              ...source,
+              active: !source.active,
+            }
+          }
+          return source;
+        }),
+      }
+    });
+
+    setMenuItems(newMenuItems);
+    getItemsById(newMenuItems).catch((err) => { console.log(err); })
+  };
   
   useEffect(() => {
     const fetchData = async () => {
@@ -53,23 +73,17 @@ function App() {
           console.log(error);
         }
       } else {
-        await getItemsById();
+        await getItemsById(menuItems);
       }
     }
-
     fetchData().catch((err) => { console.log(err); })
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  useEffect(() => {
-    getItemsById().catch((err) => { console.log(err); })
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [menuItems]);
-
   return (
     <div className="font-open-sans font-light min-h-screen min-w-full p-6 bg-white dark:bg-slate-800 dark:text-white">
       <Header menuOpen={menuOpen} handleMenuClick={handleMenuClick}/>
-      {!!menuItems.length && <Menu menuOpen={menuOpen} setMenuItems={setMenuItems} menuItems={menuItems} />}
+      {!!menuItems.length && <Menu menuOpen={menuOpen} setMenuItems={setMenuItems} menuItems={menuItems} handleCheckboxChange={handleCheckboxChange} />}
       <main>
         {data.map((source) => (source.active || source.sources.some(item => item.active)) ? (
           <div key={source.id} style={{backgroundColor: source.darkColor}}>
