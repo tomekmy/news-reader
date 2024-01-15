@@ -23,29 +23,37 @@ function App() {
     }));
 
     const activeSourcesNames = activeSources.map((item) => item.sources.map((source) => source.id)).flat();
-    const { data }: { data: DataSource[] } = await axios.get('http://localhost:5000/feed?sources=' + activeSourcesNames.join(','));
-    setData(data);
+    try {
+      const { data }: { data: DataSource[] } = await axios.get('http://localhost:5000/feed?sources=' + activeSourcesNames.join(','));
+      setData(data);
+    } catch (error) {
+      console.log(error);
+    }
   }
   
   useEffect(() => {
     const fetchData = async () => {
       if (!menuItems.length) {
-        const { data }: { data: DataSource[] } = await axios.get('http://localhost:5000/feed');
-        setData(data);
-        setMenuItems(
-          data.map((item) => ({
-            id: item.id,
-            sourceName: item.sourceName,
-            active: item.active,
-            sources: item.sources.map((source) => ({
-              id: source.id,
-              name: source.name,
-              active: source.active,
-            })),
-          }))
-        );
+        try {
+          const { data }: { data: DataSource[] } = await axios.get('http://localhost:5000/feed');
+          setData(data);
+          setMenuItems(
+            data.map((item) => ({
+              id: item.id,
+              sourceName: item.sourceName,
+              active: item.active,
+              sources: item.sources.map((source) => ({
+                id: source.id,
+                name: source.name,
+                active: source.active,
+              })),
+            }))
+          );
+        } catch (error) {
+          console.log(error);
+        }
       } else {
-        getItemsById().catch((err) => { console.log(err); });
+        await getItemsById();
       }
     }
 
