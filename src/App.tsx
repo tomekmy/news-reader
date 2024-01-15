@@ -11,6 +11,7 @@ function App() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [menuItems, setMenuItems] = useLocalStorage<MenuItem[]>("menuItems", []);
   const [data, setData] = useState<DataSource[]>([]);
+  const [loading, setLoading] = useState(false);
 
   const handleMenuClick = () => {
     setMenuOpen(!menuOpen);
@@ -24,8 +25,10 @@ function App() {
 
     const activeSourcesNames = activeSources.map((item) => item.sources.map((source) => source.id)).flat();
     try {
+      setLoading(true);
       const { data }: { data: DataSource[] } = await axios.get('http://localhost:5000/feed?sources=' + activeSourcesNames.join(','));
       setData(data);
+      setLoading(false);
     } catch (error) {
       console.log(error);
     }
@@ -55,6 +58,7 @@ function App() {
     const fetchData = async () => {
       if (!menuItems.length) {
         try {
+          setLoading(true);
           const { data }: { data: DataSource[] } = await axios.get('http://localhost:5000/feed');
           setData(data);
           setMenuItems(
@@ -69,6 +73,7 @@ function App() {
               })),
             }))
           );
+          setLoading(false);
         } catch (error) {
           console.log(error);
         }
@@ -85,6 +90,7 @@ function App() {
       <Header menuOpen={menuOpen} handleMenuClick={handleMenuClick}/>
       {!!menuItems.length && <Menu menuOpen={menuOpen} setMenuItems={setMenuItems} menuItems={menuItems} handleCheckboxChange={handleCheckboxChange} />}
       <main>
+        {loading && <div className="text-center">Ładowanie...</div>}
         {data.map((source) => (source.active || source.sources.some(item => item.active)) ? (
           <div key={source.id} style={{backgroundColor: source.darkColor}}>
             <div className="p-5 text-center grid justify-items-center	gap-3">
