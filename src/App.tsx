@@ -39,7 +39,7 @@ function App() {
           sources: item.sources.filter((source) => source.active),
         }));
 
-        const activeSourcesNames = activeSources.map((item) => item.sources.map((source) => `${item.sourceName}_${source.name}`)).flat();
+        const activeSourcesNames = activeSources.map((item) => item.sources.map((source) => source.id)).flat();
         const { data }: { data: DataSource[] } = await axios.get('http://localhost:5000/feed?sources=' + activeSourcesNames.join(','));
         setData(data);
       }
