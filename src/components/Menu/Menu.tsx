@@ -12,21 +12,18 @@ const Menu: FC<Props> = (props) => {
   
   const handleCheckboxChange = (event: ChangeEvent<HTMLInputElement>) => {
     const newMenuItems = menuItems.map(item => {
-      if (item.sourceName === event.target.name.split('_')[0]) {
-        return {
-          ...item,
-          sources: item.sources.map(source => {
-            if (source.name === event.target.name.split('_')[1]) {
-              return {
-                ...source,
-                active: !source.active,
-              }
+      return {
+        ...item,
+        sources: item.sources.map(source => {
+          if (source.id === event.target.id) {
+            return {
+              ...source,
+              active: !source.active,
             }
-            return source;
-          }),
-        }
+          }
+          return source;
+        }),
       }
-      return item;
     });
 
     setMenuItems(newMenuItems);
@@ -37,24 +34,24 @@ const Menu: FC<Props> = (props) => {
       <div className="grid">
         <ul className="flex flex-wrap gap-x-5">
           {menuItems.map(item => (
-            <li key={item.sourceName}>
+            <li key={item.id}>
               {item.sourceName}
               {!!item.sources.length && (
                 <ul className="pl-3 pb-2">
                   {item.sources.map(source => (
-                    <li key={`${item.sourceName}_${source.name}`}>
+                    <li key={source.id}>
                       <input
                         className="cursor-pointer accent-neutral-800"
                         type="checkbox"
-                        id={`${item.sourceName}_${source.name}`}
-                        name={`${item.sourceName}_${source.name}`}
+                        id={source.id}
+                        name={source.id}
                         value={source.name}
                         checked={source.active}
                         onChange={handleCheckboxChange}
                       />
                       <label
                         className="cursor-pointer pl-2"
-                        htmlFor={`${item.sourceName}_${source.name}`}
+                        htmlFor={source.id}
                       >
                         {source.name}
                       </label>
