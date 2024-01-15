@@ -15,6 +15,17 @@ function App() {
   const handleMenuClick = () => {
     setMenuOpen(!menuOpen);
   };
+
+  const getItemsById = async () => {
+    const activeSources = menuItems.map((item) => ({
+      sourceName: item.sourceName,
+      sources: item.sources.filter((source) => source.active),
+    }));
+
+    const activeSourcesNames = activeSources.map((item) => item.sources.map((source) => source.id)).flat();
+    const { data }: { data: DataSource[] } = await axios.get('http://localhost:5000/feed?sources=' + activeSourcesNames.join(','));
+    setData(data);
+  }
   
   useEffect(() => {
     const fetchData = async () => {
@@ -34,20 +45,18 @@ function App() {
           }))
         );
       } else {
-        const activeSources = menuItems.map((item) => ({
-          sourceName: item.sourceName,
-          sources: item.sources.filter((source) => source.active),
-        }));
-
-        const activeSourcesNames = activeSources.map((item) => item.sources.map((source) => source.id)).flat();
-        const { data }: { data: DataSource[] } = await axios.get('http://localhost:5000/feed?sources=' + activeSourcesNames.join(','));
-        setData(data);
+        getItemsById().catch((err) => { console.log(err); });
       }
     }
 
     fetchData().catch((err) => { console.log(err); })
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    getItemsById().catch((err) => { console.log(err); })
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [menuItems]);
 
   return (
     <div className="font-open-sans font-light min-h-screen min-w-full p-6 bg-white dark:bg-slate-800 dark:text-white">
