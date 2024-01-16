@@ -5,7 +5,6 @@ type Props = {
   menuOpen: boolean;
   menuItems: MenuItem[];
   handleCheckboxChange: (event: ChangeEvent<HTMLInputElement>) => void;
-  setMenuItems: (menuItems: MenuItem[]) => void;
 };
 
 const Menu: FC<Props> = (props) => {

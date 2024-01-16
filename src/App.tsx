@@ -88,7 +88,7 @@ function App() {
   return (
     <div className="font-open-sans font-light min-h-screen min-w-full p-6 bg-white dark:bg-slate-800 dark:text-white">
       <Header menuOpen={menuOpen} handleMenuClick={handleMenuClick}/>
-      {!!menuItems.length && <Menu menuOpen={menuOpen} setMenuItems={setMenuItems} menuItems={menuItems} handleCheckboxChange={handleCheckboxChange} />}
+      {!!menuItems.length && <Menu menuOpen={menuOpen} menuItems={menuItems} handleCheckboxChange={handleCheckboxChange} />}
       <main>
         {loading && <div className="text-center">Ładowanie...</div>}
         {data.map((source) => (source.active || source.sources.some(item => item.active)) ? (
