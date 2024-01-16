@@ -26,7 +26,7 @@ function App() {
     const activeSourcesNames = activeSources.map((item) => item.sources.map((source) => source.id)).flat();
     try {
       setLoading(true);
-      const { data }: { data: DataSource[] } = await axios.get('http://localhost:5000/feed?sources=' + activeSourcesNames.join(','));
+      const { data }: { data: DataSource[] } = await axios.get('http://localhost:5000/feed?limit=5&sources=' + activeSourcesNames.join(','));
       setData(data);
       setLoading(false);
     } catch (error) {
@@ -105,7 +105,7 @@ function App() {
                   <div className="text-sm text-red-100">Źródło: <a className="hover:text-slate-300" href={item.url}>{item.url}</a></div>
                   {
                    item.feed.map((feed: FeedItem) => (
-                    <div key={feed.id} className="grid gap-2 max-w-96 min-w-60 pt-4 items-start">
+                    <div key={feed.id} className="grid gap-2 max-w-96 min-w-60 pt-4 items-start border-solid border-2 border-sky-500 p-3">
                       <h3 className="font-bold">{feed.title}</h3>
                       {!!feed.enclosures.length && <img src={feed.enclosures[0].url} alt="Grafika artykułu" />}
                       <p className="text-sm">{moment(feed.created).isValid() ? moment(feed.created).format('DD/MM/YYYY hh:mm') : feed.created || 'Błąd odczytu daty'}</p>
