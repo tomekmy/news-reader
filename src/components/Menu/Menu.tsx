@@ -11,7 +11,7 @@ const Menu: FC<Props> = (props) => {
   const { menuOpen, menuItems, handleCheckboxChange } = props;
 
   return (
-    <nav className={`sticky ${!menuOpen ? 'max-h-0 border-none opacity-0' : 'max-h-96 border-solid opacity-100'} p-2 overflow-y-auto bg-slate-200 text-black w-full border-2 border-sky-500 font-normal transition-all`}>
+    <nav className={`sticky ${!menuOpen ? 'max-h-0 border-none opacity-0' : 'max-h-96 border-solid opacity-100'} p-2 overflow-y-auto bg-slate-200 text-black max-w-3xl border-2 border-sky-500 font-normal transition-all ml-auto mb-5`}>
       <div className="grid">
         <ul className="flex flex-wrap gap-x-5">
           {menuItems.map(item => (
