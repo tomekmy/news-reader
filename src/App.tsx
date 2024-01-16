@@ -6,6 +6,7 @@ import Menu from './components/Menu/Menu';
 import Header from './components/Header/Header';
 import striptags from 'striptags';
 import { DataSource, FeedItem, MenuItem } from './types';
+import Loading from './components/Loading/Loading';
 
 function App() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -90,7 +91,7 @@ function App() {
       <Header menuOpen={menuOpen} handleMenuClick={handleMenuClick}/>
       {!!menuItems.length && <Menu menuOpen={menuOpen} menuItems={menuItems} handleCheckboxChange={handleCheckboxChange} />}
       <main>
-        {loading && <div className="text-center">Ładowanie...</div>}
+        {loading && <Loading />}
         {data.map((source) => (source.active || source.sources.some(item => item.active)) ? (
           <div key={source.id} style={{backgroundColor: source.darkColor}}>
             <div className="p-5 text-center grid justify-items-center	gap-3">
