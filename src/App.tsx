@@ -106,15 +106,15 @@ function App() {
         {data.map((source) => (source.active || source.sources.some(item => item.active)) ? (
           <div key={source.id} style={{backgroundColor: darkMode ? source.darkColor : source.lightColor}}>
             <div className="p-5 text-center grid justify-items-center gap-3">
-              <h1 className="font-bold text-lg text-red-400">{source.sourceName}</h1>
+              <h1 className="font-bold text-lg text-slate-100">{source.sourceName}</h1>
               <img src={`/logos/${source.logoFileName}`} alt="News feed logo" className='h-12'/>
             </div>
             <div className="flex flex-wrap gap-4 justify-center p-3 sm:p-5 items-start">
             {
               source.sources.map((item) => item.active ? (
                 <div key={item.id} className="grid gap-1 max-w-96 min-w-60 pt-4 items-start">
-                  <div className="font-semibold text-red-300">Nazwa kanału: {item.name}</div>
-                  <div className="text-sm text-red-100">Źródło: <a className="hover:text-slate-300" href={item.url}>{item.url}</a></div>
+                  <div className="font-semibold text-slate-200">Nazwa kanału: {item.name}</div>
+                  <div className="text-sm text-slate-300">Źródło: <a className="hover:text-slate-300" href={item.url}>{item.url}</a></div>
                   {
                    item.feed.map((feed: FeedItem) => (
                     <div key={feed.id} className="grid gap-2 max-w-96 min-w-60 pt-4 items-start border-solid border-2 border-blue-700 p-3">
