@@ -10,6 +10,7 @@ import Loading from './components/Loading/Loading';
 import CookieInfo from './components/CookieInfo/CookieInfo';
 
 function App() {
+  const [darkMode, setDarkMode] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [menuItems, setMenuItems] = useLocalStorage<MenuItem[]>("menuItems", []);
   const [data, setData] = useState<DataSource[]>([]);
@@ -57,6 +58,15 @@ function App() {
   };
   
   useEffect(() => {
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
+      const newColorScheme = event.matches ? "dark" : "light";
+      if (newColorScheme === 'dark') {
+        setDarkMode(true);
+      } else {
+        setDarkMode(false);
+      }
+    });
+
     const fetchData = async () => {
       if (!menuItems.length) {
         try {
@@ -94,7 +104,7 @@ function App() {
       <main>
         {loading && <Loading />}
         {data.map((source) => (source.active || source.sources.some(item => item.active)) ? (
-          <div key={source.id} style={{backgroundColor: source.darkColor}}>
+          <div key={source.id} style={{backgroundColor: darkMode ? source.darkColor : source.lightColor}}>
             <div className="p-5 text-center grid justify-items-center gap-3">
               <h1 className="font-bold text-lg text-red-400">{source.sourceName}</h1>
               <img src={`/logos/${source.logoFileName}`} alt="News feed logo" className='h-12'/>
