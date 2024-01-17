@@ -7,6 +7,7 @@ import Header from './components/Header/Header';
 import striptags from 'striptags';
 import { DataSource, FeedItem, MenuItem } from './types';
 import Loading from './components/Loading/Loading';
+import CookieInfo from './components/CookieInfo/CookieInfo';
 
 function App() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -87,18 +88,18 @@ function App() {
   }, []);
 
   return (
-    <div className="font-open-sans font-light min-h-screen min-w-full p-6 bg-white dark:bg-slate-800 dark:text-white">
+    <div className="font-open-sans font-light min-h-screen min-w-full p-3 sm:p-6 bg-white dark:bg-slate-800 dark:text-white">
       <Header menuOpen={menuOpen} handleMenuClick={handleMenuClick}/>
       {!!menuItems.length && <Menu menuOpen={menuOpen} menuItems={menuItems} handleCheckboxChange={handleCheckboxChange} />}
       <main>
         {loading && <Loading />}
         {data.map((source) => (source.active || source.sources.some(item => item.active)) ? (
           <div key={source.id} style={{backgroundColor: source.darkColor}}>
-            <div className="p-5 text-center grid justify-items-center	gap-3">
+            <div className="p-5 text-center grid justify-items-center gap-3">
               <h1 className="font-bold text-lg text-red-400">{source.sourceName}</h1>
               <img src={`/logos/${source.logoFileName}`} alt="News feed logo" className='h-12'/>
             </div>
-            <div className="flex flex-wrap gap-4 justify-center p-5 items-start">
+            <div className="flex flex-wrap gap-4 justify-center p-3 sm:p-5 items-start">
             {
               source.sources.map((item) => item.active ? (
                 <div key={item.id} className="grid gap-1 max-w-96 min-w-60 pt-4 items-start">
@@ -106,7 +107,7 @@ function App() {
                   <div className="text-sm text-red-100">Źródło: <a className="hover:text-slate-300" href={item.url}>{item.url}</a></div>
                   {
                    item.feed.map((feed: FeedItem) => (
-                    <div key={feed.id} className="grid gap-2 max-w-96 min-w-60 pt-4 items-start border-solid border-2 border-sky-500 p-3">
+                    <div key={feed.id} className="grid gap-2 max-w-96 min-w-60 pt-4 items-start border-solid border-2 border-blue-700 p-3">
                       <h3 className="font-bold">{feed.title}</h3>
                       {!!feed.enclosures.length && <img src={feed.enclosures[0].url} alt="Grafika artykułu" />}
                       <p className="text-sm">{moment(feed.created).isValid() ? moment(feed.created).format('DD/MM/YYYY hh:mm') : feed.created || 'Błąd odczytu daty'}</p>
@@ -120,6 +121,7 @@ function App() {
             </div>
           </div>
         ): null)}
+        <CookieInfo />
       </main>
     </div>
   )
