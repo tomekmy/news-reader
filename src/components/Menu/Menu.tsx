@@ -4,14 +4,16 @@ import { MenuItem } from "../../types";
 type Props = {
   menuOpen: boolean;
   menuItems: MenuItem[];
+  limit: number;
+  handleChangeLimit: (event: ChangeEvent<HTMLInputElement>) => void;
   handleCheckboxChange: (event: ChangeEvent<HTMLInputElement>) => void;
 };
 
 const Menu: FC<Props> = (props) => {
-  const { menuOpen, menuItems, handleCheckboxChange } = props;
+  const { menuOpen, menuItems, handleCheckboxChange, limit, handleChangeLimit } = props;
 
   return (
-    <nav className={`sticky ${!menuOpen ? 'max-h-0 border-none opacity-0' : 'max-h-96 border-solid opacity-100'} p-2 overflow-y-auto bg-slate-200 text-black max-w-3xl border-2 border-sky-500 font-normal transition-all ml-auto mb-5`}>
+    <nav className={`sticky ${!menuOpen ? 'max-h-0 border-none opacity-0' : 'max-h-96 border-solid opacity-100'} p-2 overflow-y-auto bg-slate-200 text-black max-w-3xl border-2 border-blue-700 font-normal transition-all ml-auto mb-5`}>
       <div className="grid">
         <ul className="flex flex-wrap gap-x-5">
           {menuItems.map(item => (
@@ -42,7 +44,16 @@ const Menu: FC<Props> = (props) => {
             </li>
           ))}
         </ul>
-        <a className="justify-self-end" href="#">Ustawienia</a>
+        <div className="grid grid-flow-col">
+          <label htmlFor="limit">Limit: </label>
+          <input
+            type="tel"
+            id="limit"
+            name="limit"
+            value={limit || ''}
+            onChange={handleChangeLimit}
+            />
+        </div>
       </div>
     </nav>
   );

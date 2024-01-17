@@ -11,6 +11,7 @@ import CookieInfo from './components/CookieInfo/CookieInfo';
 
 function App() {
   const [darkMode, setDarkMode] = useState(false);
+  const [limit, setLimit] = useLocalStorage('limit', 50);
   const [menuOpen, setMenuOpen] = useState(false);
   const [menuItems, setMenuItems] = useLocalStorage<MenuItem[]>("menuItems", []);
   const [data, setData] = useState<DataSource[]>([]);
@@ -18,6 +19,10 @@ function App() {
 
   const handleMenuClick = () => {
     setMenuOpen(!menuOpen);
+  };
+
+  const handleChangeLimit = (event: ChangeEvent<HTMLInputElement>) => {
+    setLimit(+event.target.value);
   };
 
   const getItemsById = async (menu: MenuItem[]) => {
@@ -29,7 +34,7 @@ function App() {
     const activeSourcesNames = activeSources.map((item) => item.sources.map((source) => source.id)).flat();
     try {
       setLoading(true);
-      const { data }: { data: DataSource[] } = await axios.get('http://localhost:5000/feed?limit=5&sources=' + activeSourcesNames.join(','));
+      const { data }: { data: DataSource[] } = await axios.get(`http://localhost:5000/feed?limit=${limit}&sources=${activeSourcesNames.join(',')}`);
       setData(data);
       setLoading(false);
     } catch (error) {
@@ -67,6 +72,12 @@ function App() {
       }
     });
 
+    if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      setDarkMode(true);
+    } else {
+      setDarkMode(false);
+    }
+
     const fetchData = async () => {
       if (!menuItems.length) {
         try {
@@ -100,7 +111,15 @@ function App() {
   return (
     <div className="font-open-sans font-light min-h-screen min-w-full p-3 sm:p-6 bg-white dark:bg-slate-800 dark:text-white">
       <Header menuOpen={menuOpen} handleMenuClick={handleMenuClick}/>
-      {!!menuItems.length && <Menu menuOpen={menuOpen} menuItems={menuItems} handleCheckboxChange={handleCheckboxChange} />}
+      {!!menuItems.length && (
+        <Menu
+          menuOpen={menuOpen}
+          menuItems={menuItems}
+          handleCheckboxChange={handleCheckboxChange}
+          limit={limit}
+          handleChangeLimit={handleChangeLimit}
+        />
+      )}
       <main>
         {loading && <Loading />}
         {data.map((source) => (source.active || source.sources.some(item => item.active)) ? (
