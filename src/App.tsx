@@ -1,6 +1,6 @@
 import { ChangeEvent, useEffect, useState } from 'react';
 import moment from "moment";
-import { useLocalStorage } from "@uidotdev/usehooks";
+import { useLocalStorage, useDebounce } from "@uidotdev/usehooks";
 import axios from 'axios';
 import Menu from './components/Menu/Menu';
 import Header from './components/Header/Header';
@@ -16,13 +16,16 @@ function App() {
   const [menuItems, setMenuItems] = useLocalStorage<MenuItem[]>("menuItems", []);
   const [data, setData] = useState<DataSource[]>([]);
   const [loading, setLoading] = useState(false);
+  const debouncedLimit = useDebounce(limit, 500);
+
 
   const handleMenuClick = () => {
     setMenuOpen(!menuOpen);
   };
 
   const handleChangeLimit = (event: ChangeEvent<HTMLInputElement>) => {
-    setLimit(+event.target.value);
+    const limit = +event.target.value < 1 ? 1 : +event.target.value > 50 ? 50 : +event.target.value;
+    setLimit(limit);
   };
 
   const getItemsById = async (menu: MenuItem[]) => {
@@ -34,7 +37,7 @@ function App() {
     const activeSourcesNames = activeSources.map((item) => item.sources.map((source) => source.id)).flat();
     try {
       setLoading(true);
-      const { data }: { data: DataSource[] } = await axios.get(`http://localhost:5000/feed?limit=${limit}&sources=${activeSourcesNames.join(',')}`);
+      const { data }: { data: DataSource[] } = await axios.get(`http://localhost:5000/feed?limit=${debouncedLimit}&sources=${activeSourcesNames.join(',')}`);
       setData(data);
       setLoading(false);
     } catch (error) {
@@ -61,6 +64,11 @@ function App() {
     setMenuItems(newMenuItems);
     getItemsById(newMenuItems).catch((err) => { console.log(err); })
   };
+
+  useEffect(() => {
+    getItemsById(menuItems).catch((err) => { console.log(err); }) 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [debouncedLimit]);
   
   useEffect(() => {
     window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {

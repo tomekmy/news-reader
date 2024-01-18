@@ -44,13 +44,22 @@ const Menu: FC<Props> = (props) => {
             </li>
           ))}
         </ul>
-        <div className="grid grid-flow-col">
-          <label htmlFor="limit">Limit: </label>
+        <div className="grid grid-cols-[auto_50px] justify-end gap-3">
+          <div className="grid grid-flow-col gap-2 items-center">
+            <img
+              src="/assets/info_icon.svg"
+              alt="Info"
+              className="inline h-4 cursor-pointer"
+              title="Limit określa ile artykułów z każdego źródła ma być wyświetlanych. Minimalna wartość to 1 a maksymalna 50."
+              onClick={() => {alert('Limit określa ile artykułów z każdego źródła ma być wyświetlanych. Minimalna wartość to 1 a maksymalna 50.')}}
+            />
+            <label htmlFor="limit">Limit:</label>
+          </div>
           <input
             type="tel"
             id="limit"
             name="limit"
-            value={limit || ''}
+            value={limit}
             onChange={handleChangeLimit}
             />
         </div>
