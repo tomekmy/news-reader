@@ -90,7 +90,7 @@ function App() {
       if (!menuItems.length) {
         try {
           setLoading(true);
-          const { data }: { data: DataSource[] } = await axios.get('http://localhost:5000/feed');
+          const { data }: { data: DataSource[] } = await axios.get(`http://localhost:5000/feed?limit=${debouncedLimit}`);
           setData(data);
           setMenuItems(
             data.map((item) => ({
